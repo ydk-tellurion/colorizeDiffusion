@@ -21,6 +21,10 @@ from ldm.util import instantiate_from_config
 def make_beta_schedule(schedule, n_timestep, linear_start=1e-4, linear_end=2e-2, cosine_s=8e-3):
     if schedule == "linear":
         betas = (
+                torch.linspace(linear_start, linear_end, n_timestep, dtype=torch.float64)
+        )
+    elif schedule == "scaled_linear":
+        betas = (
                 torch.linspace(linear_start ** 0.5, linear_end ** 0.5, n_timestep, dtype=torch.float64) ** 2
         )
 

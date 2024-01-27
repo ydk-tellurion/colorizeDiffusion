@@ -23,7 +23,7 @@ from ldm.modules.ema import LitEma
 from ldm.modules.distributions.distributions import normal_kl, DiagonalGaussianDistribution
 from ldm.models.autoencoder import IdentityFirstStage, AutoencoderKL
 from ldm.modules.diffusionmodules.util import make_beta_schedule, extract_into_tensor, noise_like
-from ldm.models.diffusion.ddim import DDIMSampler
+from refnet.ldm.ddim import DDIMSampler
 
 
 __conditioning_keys__ = {'concat': 'c_concat',
@@ -46,7 +46,7 @@ class DDPM(nn.Module):
     def __init__(self,
                  unet_config,
                  timesteps=1000,
-                 beta_schedule="linear",
+                 beta_schedule="scaled_linear",
                  loss_type="l2",
                  ckpt_path=None,
                  ignore_keys=[],
@@ -131,7 +131,7 @@ class DDPM(nn.Module):
         if self.ucg_training:
             self.ucg_prng = np.random.RandomState()
 
-    def register_schedule(self, given_betas=None, beta_schedule="linear", timesteps=1000,
+    def register_schedule(self, given_betas=None, beta_schedule="scaled_linear", timesteps=1000,
                           linear_start=1e-4, linear_end=2e-2, cosine_s=8e-3):
         if exists(given_betas):
             betas = given_betas
@@ -588,7 +588,7 @@ class LatentDiffusion(DDPM):
             print("### USING STD-RESCALING ###")
 
     def register_schedule(self,
-                          given_betas=None, beta_schedule="linear", timesteps=1000,
+                          given_betas=None, beta_schedule="scaled_linear", timesteps=1000,
                           linear_start=1e-4, linear_end=2e-2, cosine_s=8e-3):
         super().register_schedule(given_betas, beta_schedule, timesteps, linear_start, linear_end, cosine_s)
 
@@ -821,13 +821,13 @@ class LatentDiffusion(DDPM):
 
     def forward(self, x, c, *args, **kwargs):
         t = torch.randint(0, self.num_timesteps, (x.shape[0],), device=x.device).long()
-        if self.model.conditioning_key is not None:
-            assert c is not None
-            if self.cond_stage_trainable:
-                c = self.get_learned_conditioning(c)
-            if self.shorten_cond_schedule:  # TODO: drop this option
-                tc = self.cond_ids[t].to(self.device)
-                c = self.q_sample(x_start=c, t=tc, noise=torch.randn_like(c.float()))
+        # if self.model.conditioning_key is not None:
+        #     assert c is not None
+        #     if self.cond_stage_trainable:
+        #         c = self.get_learned_conditioning(c)
+        #     if self.shorten_cond_schedule:  # TODO: drop this option
+        #         tc = self.cond_ids[t].to(self.device)
+        #         c = self.q_sample(x_start=c, t=tc, noise=torch.randn_like(c.float()))
         return self.p_losses(x, c, t, *args, **kwargs)
 
     def apply_model(self, x_noisy, t, cond, return_ids=False):
@@ -1299,11 +1299,12 @@ class DiffusionWrapper(nn.Module):
         self.conditioning_key = conditioning_key
         assert self.conditioning_key in [None, 'concat', 'crossattn', 'hybrid', 'adm', 'hybrid-adm', 'crossattn-adm']
 
-    def forward(self, x, t, c_concat: list = None, c_crossattn: list = None, c_adm=None):
+    def forward(self, x, t, c_concat: list = None, c_crossattn: list = None, c_adm=None, injects=None):
         if self.conditioning_key is None:
             out = self.diffusion_model(x, t)
         elif self.conditioning_key == 'concat':
-            out = self.diffusion_model(x, t, concat=c_concat[0])
+            x = torch.cat([x, c_concat[0]], 1)
+            out = self.diffusion_model(x, t)
         elif self.conditioning_key == 'crossattn':
             if not self.sequential_cross_attn:
                 cc = torch.cat(c_crossattn, 1)
@@ -1317,14 +1318,14 @@ class DiffusionWrapper(nn.Module):
             else:
                 out = self.diffusion_model(x, t, context=cc)
         elif self.conditioning_key == 'hybrid':
-            xc = torch.cat(c_concat, 1)
             cc = torch.cat(c_crossattn, 1)
-            out = self.diffusion_model(x, t, context=cc, concat=xc)
+            out = self.diffusion_model(x, t, context=cc, concat=c_concat, injects=injects)
         elif self.conditioning_key == 'hybrid-adm':
             assert c_adm is not None
-            xc = torch.cat([x] + c_concat, dim=1)
+            xc = torch.cat(c_concat, 1)
             cc = torch.cat(c_crossattn, 1)
-            out = self.diffusion_model(xc, t, context=cc, y=c_adm)
+            c_adm = torch.cat(c_adm, 1)
+            out = self.diffusion_model(x, t, context=cc, concat=xc, injects=injects, y=c_adm)
         elif self.conditioning_key == 'crossattn-adm':
             assert c_adm is not None
             cc = torch.cat(c_crossattn, 1)
