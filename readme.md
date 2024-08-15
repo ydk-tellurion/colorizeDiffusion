@@ -51,7 +51,9 @@ Then you can browse the UI in http://localhost:7860/.
 
 For artifacts like spatial entanglement (the distribution problem discussed in the paper) like this
 ![img](assets/entanglement.png)
-try:
+**We've solved the spatial entanglement in the latest implementation, will be released soon.**
+
+For current open-source version, try:
 1. Activate **Pad reference** and increase **Pad reference with margin** to around 1.5, or
 2. Reduce **Overall crossattn scale** to 0.4-0.8. (Best for handling all kinds of artifacts caused by the distribution problem, but accordingly degrade the similarity with referneces)
 
@@ -60,7 +62,7 @@ We offer a precise control of crossattn scales, check **Accurate control** part.
 A simple but effective solution to remove spatial entanglement might be directly generating amounts of semantically paired images as training data using image variation methods,   
 yet this semantic alignment still results in the distribution problem.
 
-We've solved the spatial entanglement in the latest implementation, will be released soon.
+
 
 When using stylized image like ***The Starry Night*** for style transfer, try **Attention injection** with **Karras**-based sampler.
 ![img](assets/style%20transfer.png)
