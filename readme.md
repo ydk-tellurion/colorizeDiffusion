@@ -50,7 +50,7 @@ Then you can browse the UI in http://localhost:7860/.
 | Visualize                 | Used for local manipulation. Visualize the regions selected by each threshold.    |
 
 For artifacts like spatial entanglement (the distribution problem discussed in the paper) like this
-![img](assets/entanglement.png)
+![img](assets/entanglement.png)  
 **We've solved the spatial entanglement in the latest implementation, will be released soon.**
 
 For current open-source version, try:
