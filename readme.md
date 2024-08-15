@@ -60,8 +60,7 @@ We offer a precise control of crossattn scales, check **Accurate control** part.
 A simple but effective solution to remove spatial entanglement might be directly generating amounts of semantically paired images as training data using image variation methods,   
 yet this semantic alignment still results in the distribution problem.
 
-Q: Why padding margin is useful?  
-A: Margins are embedded to "pure white backgrounds" and suppress the generation of backgrounds. We notice that models trained on large-scale datasets sometimes hard to generate white backgroudns, especially using image prompt and anime-style data.
+We've solved the spatial entanglement in the latest implementation, will be released soon.
 
 When using stylized image like ***The Starry Night*** for style transfer, try **Attention injection** with **Karras**-based sampler.
 ![img](assets/style%20transfer.png)
