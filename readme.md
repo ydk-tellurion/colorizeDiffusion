@@ -9,8 +9,6 @@ We suggest version 3 for checking the detailed explanation for the condition con
 
 Model weights are available: https://huggingface.co/tellurion/colorizer.
 
-Latest FID evaluation based on Karras noise scheduler:  
-![img](assets/fid.png)
 
 Here in this evaluation, the inferior FID (27.4624) of T2I results was achieved by assigning mismatched (sketch, text) inputs.  
 As quality-related prompts were adopted for T2I models, this FID evaluation also indicates that T2I models also slightly suffer from the distribution problem.
