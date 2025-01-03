@@ -4,9 +4,9 @@
 
 (July. 2024) 
 Paper link for this repository: [ColorizeDiffusion](https://arxiv.org/abs/2401.01456).  
-WACV 2025 has accepted the v1 version paper (only reference-based colorization), with details about training the base denoising U-Net.
-We will soon release v1.5 and v2, which solve the spatial entanglement and enhance background & style transfer.
-Character-specified colorization will be enhanced this year.
+WACV 2025 has accepted the paper (only reference-based colorization) regarding the training details of the open-source v1 model.
+We will soon release v1.5 (or v2) models, which solve the spatial entanglement and enhance background & style transfer.
+Enhancement for character-specified colorization will be done this year.
 
 For the details of reasons why the training is organized like this, please refer to version 3 of the arxiv paper (more detailed than WACV one).
 Model weights are available: https://huggingface.co/tellurion/colorizer.
