@@ -8,15 +8,8 @@ WACV 2025 has accepted the v1 version paper (only reference-based colorization),
 We will soon release v1.5 and v2, which solve the spatial entanglement and enhance background & style transfer.
 Character-specified colorization will be enhanced this year.
 
-We've uploaded a newer version of the technical report and soon the latest one for the released checkpoints.  
-We suggest version 3 for checking the detailed explanation for the condition conflict (the distribution problem in the paper) and soon version 4 for the final architecture and training.
-
+For the details of reasons why the training is organized like this, please refer to version 3 of the arxiv paper (more detailed than WACV one).
 Model weights are available: https://huggingface.co/tellurion/colorizer.
-
-
-Here in this evaluation, the inferior FID (27.4624) of T2I results was achieved by assigning mismatched (sketch, text) inputs.  
-As quality-related prompts were adopted for T2I models, this FID evaluation also indicates that T2I models also slightly suffer from the distribution problem.
-It's just we usually do not give text prompts conflicting with the sketches (or hard to give because there are usually margins in the background).
 
 ## Implementation Details
 The repository offers the updated implementation of ColorizeDiffusion.  
