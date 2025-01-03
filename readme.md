@@ -4,6 +4,10 @@
 
 (July. 2024) 
 Paper link for this repository: [ColorizeDiffusion](https://arxiv.org/abs/2401.01456).  
+WACV 2025 has accepted the v1 version paper (only reference-based colorization), with details about training the base denoising U-Net.
+We will soon release v1.5 and v2, which solve the spatial entanglement and enhance background & style transfer.
+Character-specified colorization will be enhanced this year.
+
 We've uploaded a newer version of the technical report and soon the latest one for the released checkpoints.  
 We suggest version 3 for checking the detailed explanation for the condition conflict (the distribution problem in the paper) and soon version 4 for the final architecture and training.
 
